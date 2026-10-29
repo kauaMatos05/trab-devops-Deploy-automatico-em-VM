@@ -1,0 +1,37 @@
+services:
+  # Banco de dados PostgreSQL
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: crud
+      POSTGRES_PASSWORD: crud123
+      POSTGRES_DB: produtos
+    volumes:
+      - dados-banco:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crud -d produtos"]
+      interval: 5s
+      retries: 10
+
+  # Aplicação Node.js (sem Dockerfile: usa a imagem oficial do Node)
+  app:
+    image: node:22-alpine
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./app:/app
+    command: sh -c "npm install && npm start"
+    ports:
+      - "8080:3000"
+    environment:
+      DB_HOST: db
+      DB_USER: crud
+      DB_PASSWORD: crud123
+      DB_NAME: produtos
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  dados-banco:

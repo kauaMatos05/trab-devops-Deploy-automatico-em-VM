@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Produtos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>Cadastro de Produtos</h1>
+    <p class="versao">Versão 1.0</p>
+
+    <form id="form">
+      <input type="hidden" id="id">
+      <input type="text" id="nome" placeholder="Nome do produto" required>
+      <input type="number" id="preco" placeholder="Preço" step="0.01" min="0" required>
+      <input type="number" id="quantidade" placeholder="Quantidade" min="0" required>
+      <button type="submit" id="botao">Adicionar</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Preço</th>
+          <th>Quantidade</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="lista"></tbody>
+    </table>
+
+    <footer>Kauã Aparecido de Matos &amp; Bruno Peclat Barbosa</footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
