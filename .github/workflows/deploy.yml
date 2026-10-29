@@ -1,0 +1,38 @@
+name: Deploy na VM
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    # Roda no Runner local (self-hosted) instalado na VM
+    runs-on: self-hosted
+
+    steps:
+      - name: Baixar o código mais recente
+        uses: actions/checkout@v4
+
+      - name: Subir os containers (se ainda não estiverem rodando)
+        run: docker compose -p crud-produtos up -d
+
+      - name: Reiniciar a aplicação com o código novo
+        run: docker compose -p crud-produtos restart app
+
+      - name: Verificar se a aplicação está respondendo
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fs http://localhost:8080/api/produtos > /dev/null; then
+              echo "Aplicação no ar!"
+              exit 0
+            fi
+            echo "Aguardando a aplicação subir ($i/30)..."
+            sleep 5
+          done
+          echo "A aplicação não respondeu."
+          docker compose -p crud-produtos logs app
+          exit 1
+
+      - name: Status dos containers
+        run: docker compose -p crud-produtos ps

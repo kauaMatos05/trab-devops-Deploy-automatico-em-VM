@@ -18,6 +18,7 @@ services:
   app:
     image: node:22-alpine
     restart: unless-stopped
+    user: "1000:1000"   # mesmo usuário da VM (kaua), evita arquivos com dono root
     working_dir: /app
     volumes:
       - ./app:/app
